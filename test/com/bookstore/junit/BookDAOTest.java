@@ -25,16 +25,15 @@ import com.bookstore.dao.CategoryDAO;
 import com.bookstore.entity.Book;
 import com.bookstore.entity.Category;
 
-public class BookDAOTest extends BaseDAOTest {
+public class BookDAOTest {
 	
 	private static BookDAO bookDao;
 	private static CategoryDAO categoryDao;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		BaseDAOTest.setUpBeforeClass();
-		bookDao = new BookDAO(entityManager);
-		categoryDao = new CategoryDAO(entityManager);
+		bookDao = new BookDAO();
+		categoryDao = new CategoryDAO();
 	}
 
 	@Test
@@ -121,7 +120,9 @@ public class BookDAOTest extends BaseDAOTest {
 	@Test
 	public void testListBooks() {
 		List<Book> listBooks = bookDao.listAll();
-		
+		for (Book book : listBooks) {
+			System.out.println(book.getTitle());
+		}
 		assertTrue(!listBooks.isEmpty());
 	}
 	
@@ -163,9 +164,30 @@ public class BookDAOTest extends BaseDAOTest {
 		
 		assertEquals(listNewBooks.size(), 4);
 	}
+	
+	@Test
+	public void testSearchBookTitle() {
+		List<Book> listSearchedBook = bookDao.searchBook("JAVA");
+		
+		assertEquals(3, listSearchedBook.size());
+	}
+	
+	@Test
+	public void testSearchBookAuthor() {
+		List<Book> listSearchedBook = bookDao.searchBook("Joshua Bloch");
+		
+		assertEquals(1, listSearchedBook.size());
+	}
+	
+	@Test
+	public void testSearchBookDescription() {
+		List<Book> listSearchedBook = bookDao.searchBook("JAVA");
+		
+		assertTrue(listSearchedBook.size() > 0);
+	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		BaseDAOTest.tearDownAfterClass();
+		bookDao.close();
 	}
 }

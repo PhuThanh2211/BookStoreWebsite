@@ -3,7 +3,6 @@ package com.bookstore.service;
 import java.io.IOException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import com.bookstore.dao.UserDAO;
 import com.bookstore.entity.Users;
 
 public class UserService {
-	private EntityManager entityManager;
 	private UserDAO userDao;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -24,10 +22,8 @@ public class UserService {
 	private static final String USER_LIST_PAGE = "user_list.jsp";
 	private static final String USER_FORM_PAGE = "user_form.jsp";
 	
-	public UserService(EntityManager entityManager, 
-			HttpServletRequest request, HttpServletResponse response) {
-		this.entityManager = entityManager;
-		userDao = new UserDAO(entityManager);
+	public UserService(HttpServletRequest request, HttpServletResponse response) {
+		userDao = new UserDAO();
 		this.request = request;
 		this.response = response;
 	}

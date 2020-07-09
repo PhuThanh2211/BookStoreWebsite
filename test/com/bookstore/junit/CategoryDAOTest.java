@@ -13,24 +13,23 @@ import org.junit.Test;
 import com.bookstore.dao.CategoryDAO;
 import com.bookstore.entity.Category;
 
-public class CategoryDAOTest extends BaseDAOTest {
+public class CategoryDAOTest {
 	
 	private static CategoryDAO categoryDao;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		BaseDAOTest.setUpBeforeClass();
-		categoryDao = new CategoryDAO(entityManager);
+		categoryDao = new CategoryDAO();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		BaseDAOTest.tearDownAfterClass();
+		categoryDao.close();
 	}
 
 	@Test
 	public void testCreateCategory() {
-		Category category = categoryDao.create(new Category("JavaScript"));
+		Category category = categoryDao.create(new Category("Python"));
 		
 		assertTrue(category != null && category.getCategoryId() > 0);
 	}
@@ -66,6 +65,9 @@ public class CategoryDAOTest extends BaseDAOTest {
 	@Test
 	public void testListAll() {
 		List<Category> listCategories = categoryDao.listAll();
+		for (Category category : listCategories) {
+			System.out.println(category.getName());
+		}
 		
 		assertTrue(listCategories.size() > 0);
 	}

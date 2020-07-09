@@ -12,7 +12,7 @@
 					</a>
 				</div>
 				<div>
-					<a href="view_book?id=${book.bookId }">
+					<a href="view_book?id=${book.bookId }&name=${book.title}">
 						<b>${book.title }</b>
 					</a>
 				</div>

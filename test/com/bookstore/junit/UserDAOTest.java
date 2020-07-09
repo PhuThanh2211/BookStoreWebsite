@@ -17,14 +17,13 @@ import org.junit.Test;
 import com.bookstore.dao.UserDAO;
 import com.bookstore.entity.Users;
 
-public class UserDAOTest extends BaseDAOTest {
+public class UserDAOTest {
 	
 	private static UserDAO userDao;
 	
 	@BeforeClass
 	public static void setup() throws Exception {
-		BaseDAOTest.setUpBeforeClass();
-		userDao = new UserDAO(entityManager);
+		userDao = new UserDAO();
 	}
 	
 	@Test
@@ -86,7 +85,10 @@ public class UserDAOTest extends BaseDAOTest {
 	@Test
 	public void testListAll() {
 		List<Users> listUsers = userDao.listAll();
-
+		for (Users user : listUsers) {
+			System.out.println(user.getFullName());
+		}
+		
 		assertTrue(listUsers.size() > 0);
 	}
 	
@@ -126,7 +128,7 @@ public class UserDAOTest extends BaseDAOTest {
 	}
 
 	public static void tearDown() throws Exception {
-		BaseDAOTest.tearDownAfterClass();
+		userDao.close();
 	}
 	
 }
