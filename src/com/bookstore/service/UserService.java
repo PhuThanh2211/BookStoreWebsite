@@ -3,7 +3,6 @@ package com.bookstore.service;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +17,9 @@ public class UserService {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	
-	private static final String ERROR_MESSAGE_PAGE = "message.jsp";
 	private static final String USER_LIST_PAGE = "user_list.jsp";
 	private static final String USER_FORM_PAGE = "user_form.jsp";
+	private static final String LOGIN_PAGE = "login.jsp";
 	
 	public UserService(HttpServletRequest request, HttpServletResponse response) {
 		userDao = new UserDAO();
@@ -39,7 +38,8 @@ public class UserService {
 		if (message != null) {
 			request.setAttribute("message", message);
 		}
-		forwardToPage(USER_LIST_PAGE);	
+		
+		CommonUtility.forwardToPage(USER_LIST_PAGE, request, response);	
 	}
 	
 	public void createUser() throws ServletException, IOException {
@@ -51,8 +51,7 @@ public class UserService {
 		if (existedUser != null) {
 			String message = "Could not create user. A user with email " + email + " already existed";
 			
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 			
 		} else {
@@ -63,8 +62,6 @@ public class UserService {
 			
 			listAllUsers(message);
 		}
-		
-		
 	}
 
 	public void editUser() throws ServletException, IOException {
@@ -73,18 +70,12 @@ public class UserService {
 		
 		if (theUser != null) {
 			request.setAttribute("user", theUser);
-			forwardToPage(USER_FORM_PAGE);
+			CommonUtility.forwardToPage(USER_FORM_PAGE, request, response);
 		} else {
 			String message = "Could not find user with ID " + userId;
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
-	}
-	
-	private void forwardToPage(String page) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
 	}
 
 	public void updateUser() throws ServletException, IOException {
@@ -98,8 +89,7 @@ public class UserService {
 		
 		if (userByEmail != null && userByEmail.getUserId() != userById.getUserId()) {
 			String message = "Could not update user. User with email " + email + " already existed";
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		} else {
 			Users theUser = null;
@@ -131,8 +121,7 @@ public class UserService {
 				message = "The default admin user account cannot be deleted";
 			}
 			
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -153,7 +142,7 @@ public class UserService {
 			String message = "Login Failed!!!";
 			request.setAttribute("message", message);
 			
-			forwardToPage("login.jsp");
+			CommonUtility.forwardToPage(LOGIN_PAGE, request, response);
 		}
 	}
 

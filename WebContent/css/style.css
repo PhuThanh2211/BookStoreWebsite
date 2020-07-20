@@ -115,6 +115,76 @@ input {
   text-align: center;
 }
 
+.center {
+	text-align: center;
+}
+
+table.book {
+	width: 80%;
+	margin: 0 auto;
+	border: 0;	
+}
+
+div.book {
+	display: inline-block;
+	margin: 20px;
+	text-align: center;	
+}
+
+.book_group {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.next_row {
+	clear: both;
+}
+
+img.book_small{
+	width: 128px; 
+	height: 164px;
+}
+
+img.book_large{
+	width: 240px; 
+	height: 300px;
+}
+
+#book_title {
+	font-size: x-large;
+	font-weight: bold;
+}
+
+#author {
+	font-size: large;
+	font-style: italic;
+}
+
+#description {
+	text-align: justify;
+	vertical-align: top;
+}
+
+#search_image {
+	display: inline-block; 
+	margin: 20px; 
+	width: 10%;
+}
+
+#search_description {
+	display: inline-block; 
+	margin: 20px; 
+	vertical-align: top; 
+	width: 60%;
+	text-align: left;
+}
+
+#search_price {
+	display: inline-block;
+	margin: 20px; 
+	vertical-align: top;
+}
+
 
 
 

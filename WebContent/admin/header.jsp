@@ -10,10 +10,13 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/richtext.min.css" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery.richtext.min.js"></script>
 
 </head>
 <body>
@@ -21,7 +24,9 @@
 	<div id="main">
 	<div align="center">
 		<div>
-			<img alt="Book Store" src="${pageContext.request.contextPath}/images/BookstoreAdminLogo.png" />
+			<a href="${pageContext.request.contextPath}/admin">
+				<img alt="Book Store" src="${pageContext.request.contextPath}/images/BookstoreAdminLogo.png" />
+			</a>	
 		</div>
 		<div>
 			Welcome, 

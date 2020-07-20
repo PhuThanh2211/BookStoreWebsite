@@ -6,9 +6,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Admin Login</title>
-<link rel="stylesheet" href="../css/style.css" />
-<script src="../js/jquery-3.4.1.min.js"></script>
-<script src="../js/jquery.validate.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
+<script src="${pageContext.request.contextPath}/js/jquery-3.4.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery.validate.min.js"></script>
 </head>
 <body>
 	<div align="center">

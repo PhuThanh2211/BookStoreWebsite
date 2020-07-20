@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.bookstore.dao.CategoryDAO;
 import com.bookstore.entity.Category;
@@ -36,14 +37,23 @@ public class CommonFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		HttpSession session = httpRequest.getSession();
 		
 		String endPartURI = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
-		if (!endPartURI.startsWith("/admin") && !endPartURI.startsWith("/js") && !endPartURI.startsWith("/css")) {
-			List<Category> listCategories = categoryDao.listAll();
-			request.setAttribute("listCategories", listCategories);
+		
+		Boolean loggedIn = session != null && session.getAttribute("loggedCustomer") != null;
+		
+		if ((!loggedIn && endPartURI.startsWith("/view_profile")) || endPartURI.startsWith("/frontend") ) {
+			httpResponse.sendRedirect(httpRequest.getContextPath());
+		} else {
+			if (!endPartURI.startsWith("/admin") && !endPartURI.startsWith("/js") && !endPartURI.startsWith("/css")) {
+				List<Category> listCategories = categoryDao.listAll();
+				request.setAttribute("listCategories", listCategories);
+			}
+			chain.doFilter(request, response);
 		}
 		
-		chain.doFilter(request, response);
+		
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {

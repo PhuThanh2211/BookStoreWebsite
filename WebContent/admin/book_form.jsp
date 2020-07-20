@@ -98,6 +98,9 @@
 		    changeYear: true
 		});
 		
+		$("#description").richText();
+
+		
 		$("#bookImage").change(function() {
 			showImageThumbnail(this);
 		});

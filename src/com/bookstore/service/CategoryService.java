@@ -3,11 +3,11 @@ package com.bookstore.service;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bookstore.dao.BookDAO;
 import com.bookstore.dao.CategoryDAO;
 import com.bookstore.entity.Category;
 
@@ -16,7 +16,6 @@ public class CategoryService {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	
-	private static final String ERROR_MESSAGE_PAGE = "message.jsp";
 	private static final String CATEGORY_LIST_PAGE = "category_list.jsp";
 	private static final String CATEGORY_FORM_PAGE = "category_form.jsp";
 	
@@ -39,7 +38,7 @@ public class CategoryService {
 		}
 		request.setAttribute("listCategories", listCategories);
 		
-		forwardToPage(CATEGORY_LIST_PAGE);
+		CommonUtility.forwardToPage(CATEGORY_LIST_PAGE, request, response);
 		
 	}
 	
@@ -49,8 +48,7 @@ public class CategoryService {
 		Category categoryByName = categoryDao.findByName(name);
 		if (categoryByName != null) {
 			String message = "Could not create category. A category with name " + name + " already existed";
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		} else {
 			Category category = new Category(name);
@@ -66,11 +64,10 @@ public class CategoryService {
 		
 		if (theCategory != null) {
 			request.setAttribute("category", theCategory);
-			forwardToPage(CATEGORY_FORM_PAGE);
+			CommonUtility.forwardToPage(CATEGORY_FORM_PAGE, request, response);
 		} else {
 			String message = "Could not find category with ID " + categoryId;
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -86,8 +83,7 @@ public class CategoryService {
 		
 		if (categoryByName != null && categoryByName.getCategoryId() != categoryById.getCategoryId()) {
 			String message = "Could not upadte category. A category with name " + name + " already existed";
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		} else {
 			categoryById.setName(name);
@@ -98,24 +94,27 @@ public class CategoryService {
 		}
 		
 	}
-	
-	private void forwardToPage(String page) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
-	}
 
 	public void deleteCategory() throws ServletException, IOException {
 		int categoryId = Integer.parseInt(request.getParameter("id"));
 		Category deletedCategory = categoryDao.get(categoryId);
 		
+		BookDAO bookDao = new BookDAO();
+		long numOfBooks = bookDao.countByCategory(categoryId);
+		String message = "The category has been deleted successfully";
+		
 		if (deletedCategory != null) {
-			categoryDao.delete(categoryId);
-			String message = "The category has been deleted successfully";
+			if (numOfBooks > 0) {
+				message = "Could not delete the category " + deletedCategory.getName() + " because it contains some books";
+			} else {
+				categoryDao.delete(categoryId);
+			}
+			
 			listAllCategories(message);
+			
 		} else {
-			String message = "Could not find category with ID " + categoryId + ", or it might have been deleted";
-			request.setAttribute("message", message);
-			forwardToPage(ERROR_MESSAGE_PAGE);
+			message = "Could not find category with ID " + categoryId + ", or it might have been deleted";
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		

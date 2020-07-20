@@ -10,16 +10,20 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/richtext.min.css" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/jquery.richtext.min.js"></script>
 </head>
 <body>
-	<div align="center">
+	<div class="center">
 		<div>
-			<img alt="Book Store" src="${pageContext.request.contextPath}/images/BookstoreLogo.png" />
+			<a href="${pageContext.request.contextPath}">
+				<img alt="Book Store" src="${pageContext.request.contextPath}/images/BookstoreLogo.png" />
+			</a>
 		</div>
 		
 		<div>
@@ -28,8 +32,18 @@
 				<input type="submit" value="Search" />
 				
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="login">Sign in</a> | 
-				<a href="register">Register</a> |
+				
+				<c:if test="${loggedCustomer == null }">
+					<a href="login">Sign in</a> | 
+					<a href="register">Register</a> |
+				</c:if>
+				
+				<c:if test="${loggedCustomer != null }">
+					<a href="view_profile">Welcome, ${loggedCustomer.fullname }</a> | 
+					<a href="view_order">My Orders</a> |
+					<a href="logout">Sign Out</a> |
+				</c:if>
+				
 				<a href="login">Cart</a>
 			</form>
 		</div>

@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ public class BookService {
 	
 	private static final String BOOK_LIST_PAGE = "book_list.jsp";
 	private static final String BOOK_FORM_PAGE = "book_form.jsp";
-	private static final String MESSAGE_PAGE = "message.jsp";
 	private static final String BOOK_LIST_BY_CATEGORY_PAGE = "frontend/books_list_by_category.jsp";
 	private static final String BOOK_DETAIL_PAGE = "frontend/book_detail.jsp";
 	private static final String SEARCH_RESULT_PAGE = "frontend/search_result.jsp";
@@ -50,19 +48,14 @@ public class BookService {
 		}
 		
 		request.setAttribute("listBooks", listBooks);
-		forwardToPage(BOOK_LIST_PAGE);
-	}
-	
-	private void forwardToPage(String page) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
+		CommonUtility.forwardToPage(BOOK_LIST_PAGE, request, response);
 	}
 
 	public void showBookForm() throws ServletException, IOException {
 		List<Category> listCategories = categoryDao.listAll();
 		
 		request.setAttribute("listCategories", listCategories);
-		forwardToPage(BOOK_FORM_PAGE);
+		CommonUtility.forwardToPage(BOOK_FORM_PAGE, request, response);
 	}
 
 	public void createBook() throws ServletException, IOException {
@@ -71,8 +64,7 @@ public class BookService {
 		Book bookByTitle = bookDao.findByTitle(title);
 		if (bookByTitle != null) {
 			String message = "Could not create new book because the title " + title + " already exists";
-			request.setAttribute("message", message);
-			forwardToPage(MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -91,8 +83,7 @@ public class BookService {
 		Book theBook = bookDao.get(bookId);
 		if (theBook == null) {
 			String message = "Could not find book with ID " + bookId;
-			request.setAttribute("message", message);
-			forwardToPage(MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -100,7 +91,7 @@ public class BookService {
 		request.setAttribute("book", theBook);
 		request.setAttribute("listCategories", listCategories);
 		
-		forwardToPage(BOOK_FORM_PAGE);
+		CommonUtility.forwardToPage(BOOK_FORM_PAGE, request, response);
 		
 	}
 
@@ -112,8 +103,7 @@ public class BookService {
 		Book bookByTitle = bookDao.findByTitle(title);
 		if (bookByTitle != null && !bookByTitle.getTitle().equals(existBook.getTitle())) {
 			String message = "Could not update book because there's another book having same title";
-			request.setAttribute("message", message);
-			forwardToPage(MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -169,8 +159,7 @@ public class BookService {
 		Book existBook = bookDao.get(bookId);
 		if (existBook == null) {
 			String message = "Could not find book with ID " + bookId + ", or it might have been deleted";
-			request.setAttribute("message", message);
-			forwardToPage(MESSAGE_PAGE);
+			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
@@ -185,8 +174,7 @@ public class BookService {
 		Category existCategory = categoryDao.get(categoryId);
 		if (existCategory == null) {
 			String message = "Sorry, the category " + categoryName + " is not available";
-			request.setAttribute("message", message);
-			forwardToPage("frontend/" + MESSAGE_PAGE);
+			CommonUtility.showMessageFrontEnd(message, request, response);
 			return;
 		}
 		
@@ -194,7 +182,7 @@ public class BookService {
 		
 		request.setAttribute("category", existCategory);
 		request.setAttribute("listBooks", listBooks);
-		forwardToPage(BOOK_LIST_BY_CATEGORY_PAGE);
+		CommonUtility.forwardToPage(BOOK_LIST_BY_CATEGORY_PAGE, request, response);
 	}
 
 	public void viewBookDetail() throws ServletException, IOException {
@@ -203,13 +191,12 @@ public class BookService {
 		Book existedBook = bookDao.get(bookId);
 		if (existedBook == null) {
 			String message = "Sorry, the book " + bookTitle + " is not available.";
-			request.setAttribute("message", message);
-			forwardToPage("frontend/" + MESSAGE_PAGE);
+			CommonUtility.showMessageFrontEnd(message, request, response);
 			return;
 		}
 		
 		request.setAttribute("book", existedBook);
-		forwardToPage(BOOK_DETAIL_PAGE);
+		CommonUtility.forwardToPage(BOOK_DETAIL_PAGE, request, response);
 	}
 
 	public void searchBook() throws ServletException, IOException {
@@ -224,6 +211,6 @@ public class BookService {
 		
 		request.setAttribute("listBooks", listSearchedBook);
 		request.setAttribute("keyword", keyword);
-		forwardToPage(SEARCH_RESULT_PAGE);
+		CommonUtility.forwardToPage(SEARCH_RESULT_PAGE, request, response);
 	}
 }
