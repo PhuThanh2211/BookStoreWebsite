@@ -30,7 +30,9 @@
 								</h2>
 							</div>
 							
-							<div>Rating *****</div>
+							<div>
+								<jsp:directive.include file="book_rating.jsp" />
+							</div>
 							
 							<div>
 								<i>by ${book.author}</i>
@@ -43,7 +45,7 @@
 						
 						<div id="search_price">
 							<h3>$${book.price }</h3>
-							<h3><a href="">Add To Cart</a></h3>
+							<button class="buttonAddToCart" id="${book.bookId }">Add to Cart</button>
 						</div>
 					</div>
 				</c:forEach>
@@ -53,3 +55,11 @@
 	</div>
 	
 <jsp:directive.include file="footer.jsp" />
+<script>
+$(document).ready(function() {
+	$(".buttonAddToCart").click(function() {
+		var bookId = $(this).attr("id");
+		window.location = "add_to_cart?book_id=" + bookId;
+	});
+})
+</script>

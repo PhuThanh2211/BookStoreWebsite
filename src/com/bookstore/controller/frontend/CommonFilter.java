@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import com.bookstore.dao.CategoryDAO;
 import com.bookstore.entity.Category;
+import com.bookstore.service.CommonUtility;
 
 /**
  * Servlet Filter implementation class CommonFilter
@@ -23,6 +24,12 @@ import com.bookstore.entity.Category;
 @WebFilter("/*")
 public class CommonFilter implements Filter {
 
+	private static final String[] loginRequiredURLs = {
+			"/view_profile", "/edit_profile", "/update_profile", "/write_review",
+	};
+	
+	private static final String LOGIN_PAGE = "/frontend/login.jsp";
+	
 	private CategoryDAO categoryDao;
 	
     public CommonFilter() {
@@ -41,10 +48,15 @@ public class CommonFilter implements Filter {
 		
 		String endPartURI = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 		
+		String requestURL = httpRequest.getRequestURL().toString();
+		
 		Boolean loggedIn = session != null && session.getAttribute("loggedCustomer") != null;
 		
-		if ((!loggedIn && endPartURI.startsWith("/view_profile")) || endPartURI.startsWith("/frontend") ) {
-			httpResponse.sendRedirect(httpRequest.getContextPath());
+		if ((!loggedIn && isRequiredLogin(requestURL)) || endPartURI.startsWith("/frontend") ) {
+			String parametersGet = httpRequest.getQueryString() != null ? "?" + httpRequest.getQueryString() : "";
+			
+			session.setAttribute("redirectURL", requestURL.concat(parametersGet));
+			CommonUtility.forwardToPage(LOGIN_PAGE, httpRequest, httpResponse);
 		} else {
 			if (!endPartURI.startsWith("/admin") && !endPartURI.startsWith("/js") && !endPartURI.startsWith("/css")) {
 				List<Category> listCategories = categoryDao.listAll();
@@ -52,8 +64,16 @@ public class CommonFilter implements Filter {
 			}
 			chain.doFilter(request, response);
 		}
+	}
+	
+	private boolean isRequiredLogin(String requestURL) {
+		for (String loginRequiredURL : loginRequiredURLs) {
+			if (requestURL.contains(loginRequiredURL)) {
+				return true;
+			}
+		}
 		
-		
+		return false;
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {

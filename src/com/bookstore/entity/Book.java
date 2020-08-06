@@ -2,9 +2,11 @@ package com.bookstore.entity;
 // Generated Aug 14, 2019 10:44:05 AM by Hibernate Tools 5.2.10.Final
 
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -35,12 +37,12 @@ import javax.persistence.UniqueConstraint;
 	@NamedQuery(name = "Book.countAll", query = "SELECT COUNT(*) FROM Book b"),
 	@NamedQuery(name = "Book.findByTitle", query = "SELECT b FROM Book b WHERE b.title = :title"),
 	@NamedQuery(name = "Book.countByCategory", query = "SELECT COUNT(*) FROM Book b WHERE b.category.categoryId = :catId"),
-	@NamedQuery(name = "Book.findByCategory", query = "SELECT b FROM Book b JOIN Category c"
+	@NamedQuery(name = "Book.findByCategory", query = "SELECT b FROM Book b INNER JOIN Category c"
 			+ " ON c.categoryId = b.category.categoryId AND c.categoryId = :catId"),
 	@NamedQuery(name = "Book.findListNewBooks", query = "SELECT b FROM Book b ORDER BY b.publishDate DESC"),
 	@NamedQuery(name = "Book.search", query = "SELECT b FROM Book b WHERE b.title LIKE '%' || :keyword || '%' "
 			+ "OR b.author LIKE '%' || :keyword || '%' "
-			+ "OR b.description LIKE '%' || :keyword || '%'")
+			+ "OR b.description LIKE '%' || :keyword || '%'"),
 })
 public class Book implements java.io.Serializable {
 
@@ -59,6 +61,11 @@ public class Book implements java.io.Serializable {
 	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>(0);
 
 	public Book() {
+		
+	}
+	
+	public Book(int bookId) {
+		this.bookId = bookId;
 	}
 
 	public Book(Category category, String title, String author, String description, String isbn, byte[] image,
@@ -185,9 +192,20 @@ public class Book implements java.io.Serializable {
 		this.lastUpdateTime = lastUpdateTime;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
 	public Set<Review> getReviews() {
-		return this.reviews;
+		TreeSet<Review> sortedReview = new TreeSet<>(new Comparator<Review>() {
+
+			@Override
+			public int compare(Review review1, Review review2) {
+				// ORDER BY DESC
+				return review2.getReviewTime().compareTo(review1.getReviewTime());
+			}
+			
+		});
+		
+		sortedReview.addAll(this.reviews);
+		return sortedReview;
 	}
 
 	public void setReviews(Set<Review> reviews) {
@@ -212,6 +230,54 @@ public class Book implements java.io.Serializable {
 	@Transient
 	public void setBase64Image(String base64Image) {
 		this.base64Image = base64Image;
+	}
+	
+	@Transient
+	private float getAverageRating() {
+		float averageRating = 0.0f;
+		float sum = 0.0f;
+		
+		if (reviews.isEmpty()) {
+			return 0.0f;
+		}
+		
+		for (Review review : reviews) {
+			sum += review.getRating();
+		}
+		
+		averageRating = sum / (reviews.size());
+		
+		return averageRating;
+	}
+	
+	@Transient
+	private String getRatingString(float averageRating) {
+		String result = "";
+		
+		int numberOfStarsOn = (int) averageRating;
+		
+		for (int i = 0; i < numberOfStarsOn; i++) {
+			result += "on,";
+		}
+		
+		int next = numberOfStarsOn + 1;
+		if (averageRating > numberOfStarsOn) {
+			result += "half,";
+			next++;
+		}
+		
+		for (int j = next; j <= 5; j++) {
+			result += "off,";
+		}
+		
+		return result.substring(0, result.length() - 1);
+	}
+	
+	@Transient
+	public String getRatingStars() {
+		float averageRating = getAverageRating();
+		
+		return getRatingString(averageRating);
 	}
 
 	@Override

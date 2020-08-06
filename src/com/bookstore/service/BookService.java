@@ -157,14 +157,21 @@ public class BookService {
 	public void deleteBook() throws ServletException, IOException {
 		int bookId = Integer.parseInt(request.getParameter("id"));
 		Book existBook = bookDao.get(bookId);
+		String message = "The book deleted successfully";
+		
 		if (existBook == null) {
-			String message = "Could not find book with ID " + bookId + ", or it might have been deleted";
+			message = "Could not find book with ID " + bookId + ", or it might have been deleted";
+			CommonUtility.showMessageBackEnd(message, request, response);
+			return;
+		}
+		
+		if (!existBook.getReviews().isEmpty()) {
+			message = "Could not delete the book with ID " + bookId + " because it has reviews";
 			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}
 		
 		bookDao.delete(bookId);
-		String message = "The book deleted successfully";
 		listAllBooks(message);
 	}
 
@@ -195,6 +202,8 @@ public class BookService {
 			return;
 		}
 		
+		String text = CommonUtility.html2Text(existedBook.getDescription());
+		existedBook.setDescription(text);
 		request.setAttribute("book", existedBook);
 		CommonUtility.forwardToPage(BOOK_DETAIL_PAGE, request, response);
 	}
@@ -207,6 +216,11 @@ public class BookService {
 			listSearchedBook = bookDao.listAll();
 		} else {
 			listSearchedBook = bookDao.searchBook(keyword);
+		}
+		
+		for (Book book : listSearchedBook) {
+			String text = CommonUtility.html2Text(book.getDescription());
+			book.setDescription(text);
 		}
 		
 		request.setAttribute("listBooks", listSearchedBook);

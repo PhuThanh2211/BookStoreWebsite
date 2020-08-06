@@ -26,7 +26,7 @@
 				<tr>
 					<td colspan="2" align="center">
 						<button class="spaceButton" type="submit">Save</button>
-						<button id="cancelButton">Cancel</button>
+						<button type="button" id="cancelButton">Cancel</button>
 					</td>
 				</tr>
 			</table>
