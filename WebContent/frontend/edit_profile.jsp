@@ -118,7 +118,7 @@
 	});
 	
 	$("#cancelButton").click(function() {
-		window.location = "${pageContext.request.contextPath}/admin/list_customers";
+		window.location = "${pageContext.request.contextPath}/";
 	});
 </script>
 

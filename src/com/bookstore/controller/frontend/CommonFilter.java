@@ -25,7 +25,7 @@ import com.bookstore.service.CommonUtility;
 public class CommonFilter implements Filter {
 
 	private static final String[] loginRequiredURLs = {
-			"/view_profile", "/edit_profile", "/update_profile", "/write_review",
+			"/view_profile", "/edit_profile", "/write_review", "/checkout", "/list_orders", "/view_order"
 	};
 	
 	private static final String LOGIN_PAGE = "/frontend/login.jsp";
@@ -68,7 +68,7 @@ public class CommonFilter implements Filter {
 	
 	private boolean isRequiredLogin(String requestURL) {
 		for (String loginRequiredURL : loginRequiredURLs) {
-			if (requestURL.contains(loginRequiredURL)) {
+			if (requestURL.contains(loginRequiredURL) && !requestURL.contains("/admin")) {
 				return true;
 			}
 		}

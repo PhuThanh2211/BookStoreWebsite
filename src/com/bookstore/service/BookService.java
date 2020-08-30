@@ -14,6 +14,8 @@ import javax.servlet.http.Part;
 
 import com.bookstore.dao.BookDAO;
 import com.bookstore.dao.CategoryDAO;
+import com.bookstore.dao.OrderDAO;
+import com.bookstore.dao.ReviewDAO;
 import com.bookstore.entity.Book;
 import com.bookstore.entity.Category;
 
@@ -165,8 +167,18 @@ public class BookService {
 			return;
 		}
 		
-		if (!existBook.getReviews().isEmpty()) {
+		ReviewDAO reviewDao = new ReviewDAO();
+		long countBookByReview = reviewDao.countReviewsByBook(bookId);
+		if (countBookByReview > 0) {
 			message = "Could not delete the book with ID " + bookId + " because it has reviews";
+			CommonUtility.showMessageBackEnd(message, request, response);
+			return;
+		}
+		
+		OrderDAO orderDao = new OrderDAO();
+		long countBookByOrder = orderDao.countOrderDetailByBook(bookId);
+		if (countBookByOrder > 0) {
+			message = "Could not delete book with ID " + bookId + " because there are orders associated with it";
 			CommonUtility.showMessageBackEnd(message, request, response);
 			return;
 		}

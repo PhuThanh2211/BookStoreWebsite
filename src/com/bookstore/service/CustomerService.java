@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import com.bookstore.dao.CustomerDAO;
 import com.bookstore.dao.HashGeneration;
+import com.bookstore.dao.OrderDAO;
 import com.bookstore.dao.ReviewDAO;
 import com.bookstore.entity.Customer;
 
@@ -17,7 +18,6 @@ public class CustomerService {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private CustomerDAO customerDao;
-	private ReviewDAO reviewDao;
 	
 	private static String CUSTOMER_LIST_PAGE = "customer_list.jsp";
 	private static String CUSTOMER_FORM_PAGE = "customer_form.jsp";
@@ -29,7 +29,6 @@ public class CustomerService {
 		this.request = request;
 		this.response = response;
 		this.customerDao = new CustomerDAO();
-		this.reviewDao = new ReviewDAO();
 	}
 	
 	public void listAllCustomers() throws ServletException, IOException {
@@ -114,6 +113,7 @@ public class CustomerService {
 			return;
 		}
 		
+		ReviewDAO reviewDao = new ReviewDAO();
 		long countReviewsByCustomer = reviewDao.countReviewsByCustomer(customerId);
 		if (countReviewsByCustomer > 0) {
 			message = "Could not delete customer with ID " + customerId + " because he/she posted reviews for books";
@@ -121,7 +121,15 @@ public class CustomerService {
 			return;
 		}
 		
-//		customerDao.delete(customerId);
+		OrderDAO orderDao = new OrderDAO();
+		long countOrdersByCustomer = orderDao.countOrderByCustomer(customerId);
+		if (countOrdersByCustomer > 0) {
+			message = "Could not delete customer with ID " + customerId + " because he/she placed orders";
+			CommonUtility.showMessageBackEnd(message, request, response);
+			return;
+		}
+		
+		customerDao.delete(customerId);
 		listAllCustomers(message);
 	}
 

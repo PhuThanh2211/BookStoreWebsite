@@ -24,7 +24,8 @@ public class RemoveFromCartServlet extends HttpServlet {
 		
 		shoppingCart.removeItem(new Book(bookId));
 		
-		CommonUtility.forwardToPage(SHOPPING_CART_PAGE, request, response);
+		String cartPage = request.getContextPath().concat("/view_cart");
+		response.sendRedirect(cartPage);
 	}
 
 }

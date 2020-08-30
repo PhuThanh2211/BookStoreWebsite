@@ -1,7 +1,7 @@
 <jsp:directive.include file="header.jsp" />
 	<div class="center">
 		<br/>
-		<h2>Welcome, ${loggedCustomer.fullname }</h2>
+		<h2 class="pageheading">Welcome, ${loggedCustomer.fullname }</h2>
 		<br/>
 		
 		<table class="customer">

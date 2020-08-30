@@ -49,6 +49,10 @@ public class ReviewDAO extends JpaDAO<Review> implements GenericDAO<Review> {
 		return super.countWithNamedQuery("Review.countByCustomer", "customerId", customerId);
 	}
 	
+	public long countReviewsByBook(int bookId) {
+		return super.countWithNamedQuery("Review.countByBook", "bookId", bookId);
+	}
+	
 	public Review findByCustomerAndBook(Integer customerId, Integer bookId) {
 		Map<String, Object> mapParams = new HashMap<>();
 		mapParams.put("customerId", customerId);
@@ -61,6 +65,10 @@ public class ReviewDAO extends JpaDAO<Review> implements GenericDAO<Review> {
 		}
 		
 		return null;
+	}
+	
+	public List<Review> listMostRecentReview() {
+		return super.findWithNamedQuery("Review.findAll", 0, 3);
 	}
 
 }
