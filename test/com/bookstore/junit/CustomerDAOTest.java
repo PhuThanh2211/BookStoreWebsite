@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.bookstore.dao.CustomerDAO;
+import com.bookstore.dao.HashGeneration;
 import com.bookstore.entity.Customer;
 
 public class CustomerDAOTest {
@@ -26,10 +27,13 @@ public class CustomerDAOTest {
 	@Test
 	public void testCreateCustomer() {
 		Customer customer = new Customer();
-		customer.setEmail("ymir@dota.com");
-		customer.setFullname("Tuskarr");
-		customer.setAddress("Snowball Save");
+		customer.setEmail("magina@dota.com");
+		customer.setFirstname("Anti Mage");
+		customer.setLastname("Valve");
+		customer.setAddressLine1("Blink Away");
+		customer.setAddressLine2("IceFrog");
 		customer.setCity("ShangHai");
+		customer.setState("ShangHai");
 		customer.setCountry("China");
 		customer.setPhone("123456789");
 		customer.setZipcode("200000");
@@ -42,14 +46,14 @@ public class CustomerDAOTest {
 
 	@Test
 	public void testUpdateCustomer() {
-		int customerId = 1;
+		int customerId = 13;
 		Customer customer = customerDao.get(customerId);
 		
-		String address = "Fountain Rape";
-		customer.setAddress(address);
+		String encodePassword = HashGeneration.generateMD5(customer.getPassword());
+		customer.setPassword(encodePassword);
 		Customer updatedCustomer = customerDao.update(customer);
 		
-		assertEquals(updatedCustomer.getAddress(), address);
+		assertNotNull(updatedCustomer);
 	}
 
 	@Test
@@ -72,7 +76,11 @@ public class CustomerDAOTest {
 	public void testListAll() {
 		List<Customer> listCustomers = customerDao.listAll();
 		
-		assertTrue(listCustomers.size() == 2);
+		for (Customer customer : listCustomers) {
+			System.out.println(customer.getFirstname());
+		}
+		
+		assertTrue(listCustomers.size() > 0);
 	}
 
 	@Test

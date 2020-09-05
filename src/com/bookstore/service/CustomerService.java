@@ -24,6 +24,7 @@ public class CustomerService {
 	private static String CUSTOMER_LOGIN_PAGE = "frontend/login.jsp";
 	private static String CUSTOMER_PROFILE_PAGE = "frontend/customer_profile.jsp";
 	private static String EDIT_PROFILE_PAGE = "frontend/edit_profile.jsp";
+	private static String CUSTOMER_REGISTRATION_PAGE = "frontend/register_form.jsp";
 	
 	public CustomerService(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
@@ -75,6 +76,8 @@ public class CustomerService {
 			return;
 		} 
 		
+		CommonUtility.generateAllCountries(request);
+		
 		request.setAttribute("customer", editedCustomer);
 		CommonUtility.forwardToPage(CUSTOMER_FORM_PAGE, request, response);
 		
@@ -89,7 +92,7 @@ public class CustomerService {
 		String message = "The customer has been updated successfully";
 		
 		if (customerByEmail != null && customerByEmail.getCustomerId() != customerId) {
-			message = "Could not update the customer " + customerById.getFullname()
+			message = "Could not update the customer " + customerById.getFirstname()
 						+ " because there is a customer having same email!!!";	
 		} else {
 			getCustomerFromFormData(customerById);
@@ -153,18 +156,24 @@ public class CustomerService {
 	}
 	
 	private void getCustomerFromFormData(Customer customer) {
-		String fullName = CommonUtility.checkNull(request.getParameter("fullName"));
+		String firstname = CommonUtility.checkNull(request.getParameter("firstname"));
+		String lastname = CommonUtility.checkNull(request.getParameter("lastname"));
 		String email = CommonUtility.checkNull(request.getParameter("email"));
 		String password = CommonUtility.checkNull(request.getParameter("password"));
 		String phone = CommonUtility.checkNull(request.getParameter("phone"));
-		String address = CommonUtility.checkNull(request.getParameter("address"));
+		String adressLine1 = CommonUtility.checkNull(request.getParameter("address1"));
+		String adressLine2 = CommonUtility.checkNull(request.getParameter("address2"));
 		String city = CommonUtility.checkNull(request.getParameter("city"));
+		String state = CommonUtility.checkNull(request.getParameter("state"));
 		String country = CommonUtility.checkNull(request.getParameter("country"));
 		String zipCode = CommonUtility.checkNull(request.getParameter("zipCode"));
 
-		customer.setFullname(fullName);		
+		customer.setFirstname(firstname);	
+		customer.setLastname(lastname);
 		customer.setPhone(phone);
-		customer.setAddress(address);
+		customer.setAddressLine1(adressLine1);
+		customer.setAddressLine2(adressLine2);
+		customer.setState(state);
 		customer.setCity(city);
 		customer.setCountry(country);
 		customer.setZipcode(zipCode);
@@ -216,6 +225,7 @@ public class CustomerService {
 	}
 
 	public void editProfileCustomer() throws ServletException, IOException {
+		CommonUtility.generateAllCountries(request);
 		CommonUtility.forwardToPage(EDIT_PROFILE_PAGE, request, response);
 	}
 
@@ -225,6 +235,22 @@ public class CustomerService {
 		getCustomerFromFormData(theCustomer);
 		customerDao.update(theCustomer);
 		
+		CommonUtility.forwardToPage(CUSTOMER_PROFILE_PAGE, request, response);
+	}
+
+	public void showCustomerNewForm() throws ServletException, IOException {
+		CommonUtility.generateAllCountries(request);
+		
+		CommonUtility.forwardToPage(CUSTOMER_FORM_PAGE, request, response);
+	}
+	
+	public void showCustomerRegistrationForm() throws ServletException, IOException {
+		CommonUtility.generateAllCountries(request);
+		
+		CommonUtility.forwardToPage(CUSTOMER_REGISTRATION_PAGE, request, response);
+	}
+
+	public void viewProfileCustomer() throws ServletException, IOException {
 		CommonUtility.forwardToPage(CUSTOMER_PROFILE_PAGE, request, response);
 	}
 }

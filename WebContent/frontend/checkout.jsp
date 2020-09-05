@@ -48,65 +48,99 @@
 						</c:forEach>
 						
 						<tr>
-							<td colspan="5" align="right">
-								<b><i>TOTAL:</i></b>
-							</td>
-							<td>
-								<b>${cart.totalQuantity } book(s)</b>
-							</td>
-							<td>
-								<b><fmt:formatNumber value="${cart.totalAmount }" type="currency" /></b>
+							<td colspan="7" align="right">
+								<p>Number of Copies: ${cart.totalQuantity }</p>
+								<p>Subtotal: <fmt:formatNumber value="${cart.totalAmount }" type="currency" /></p>
+								<p>Tax: <fmt:formatNumber value="${tax }" type="currency" /></p>
+								<p>Shipping Fee: <fmt:formatNumber value="${shippingFee }" type="currency" /></p>
+								<p><b>TOTAL: <fmt:formatNumber value="${total }" type="currency" /></b></p>
 							</td>
 						</tr>
 					</table>
 					
 					<form id="orderForm" action="place_order" method="POST">
-						<h2>Your Shipping Information:</h2>
+						<h2 class="pageheading">Your Shipping Information:</h2>
 						
 						<table>
 							<tr>
-								<td>Recipient Name:</td>
+								<td>First Name:</td>
 								<td>
-									<input type="text" name="recipientName" value="${loggedCustomer.fullname }"
+									<input type="text" name="firstname" value="${loggedCustomer.firstname }" />
 								</td>
 							</tr>
+							
 							<tr>
-								<td>Recipient Phone:</td>
+								<td>Last Name:</td>
 								<td>
-									<input type="text" name="recipientPhone" value="${loggedCustomer.phone }"
+									<input type="text" name="lastname" value="${loggedCustomer.lastname }" />
 								</td>
 							</tr>
+							
 							<tr>
-								<td>Street Address:</td>
+								<td>Phone:</td>
 								<td>
-									<input type="text" name="address" value="${loggedCustomer.address }"
+									<input type="text" name="phone" value="${loggedCustomer.phone }" />
 								</td>
 							</tr>
+							
+							<tr>
+								<td>Address Line 1:</td>
+								<td>
+									<input type="text" name="address1" value="${loggedCustomer.addressLine1 }" />
+								</td>
+							</tr>
+							
+							<tr>
+								<td>Address Line 2:</td>
+								<td>
+									<input type="text" name="address2" value="${loggedCustomer.addressLine2 }" />
+								</td>
+							</tr>
+							
 							<tr>
 								<td>City: </td>
 								<td>
-									<input type="text" name="city" value="${loggedCustomer.city }"
+									<input type="text" name="city" value="${loggedCustomer.city }" />
 								</td>
 							</tr>
+							
+							<tr>
+								<td>State: </td>
+								<td>
+									<input type="text" name="state" value="${loggedCustomer.state }" />
+								</td>
+							</tr>
+							
 							<tr>
 								<td>Zip Code:</td>
 								<td>
-									<input type="text" name="zipcode" value="${loggedCustomer.zipcode }"
+									<input type="text" name="zipcode" value="${loggedCustomer.zipcode }" />
 								</td>
 							</tr>
+							
 							<tr>
 								<td>Country:</td>
 								<td>
-									<input type="text" name="country" value="${loggedCustomer.country }"
+									<select name="country" id="country">
+										<c:forEach items="${mapCountries }" var="country">
+											<option value="${country.value }"
+												<c:if test="${loggedCustomer.country eq country.value }">
+													selected="selected"
+												</c:if> >
+												${country.key }
+											</option>
+										</c:forEach>
+									</select>
 								</td>
 							</tr>
 						</table>
 						
-						<h2>Payment:</h2>
+						<h2 class="pageheading">Payment:</h2>
 						Choose your payment method:
 						&nbsp;&nbsp;&nbsp;
 						<select name="paymentMethod">
 							<option value="Cash On Delivery">Cash On Delivery</option>
+							<option value="Paypal">Paypal or Credit Cart</option>
 						</select>
 						
 						<br/><br/><br/><br/>
@@ -129,19 +163,24 @@
 	$(document).ready(function() {
 		$("#orderForm").validate({
 			rules: {
-				recipientName: "required",
-				recipientPhone: "required",
-				address: "required",
+				firstname: "required",
+				lastname: "required",
+				phone: "required",
+				address1: "required",
+				address2: "required",
 				city: "required",
+				state: "required",
 				zipcode: "required",
-				country: "required",
 			},
 		
 			messages: {
-				recipientName: "Please enter recipient name",
-				recipientPhone: "Please enter phone number",
-				address: "Please enter address",
+				firstname: "Please enter first name",
+				lastname: "Please enter last name",
+				phone: "Please enter phone",
+				address1: "Please enter address line 1",
+				address2: "Please enter address line 2",
 				city: "Please enter city",
+				state: "Please enter state",
 				zipcode: "Please enter zip code",
 				country: "Please enter country",
 			}		

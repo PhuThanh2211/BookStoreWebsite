@@ -1,7 +1,7 @@
 <jsp:directive.include file="header.jsp" />
 	<div align="center">
 		<h2 class="pageheading">Customers Management</h2>
-		<h3><a href="customer_form.jsp">Create New Customer</a></h3>
+		<h3><a href="new_customer">Create New Customer</a></h3>
 	</div>
 	
 	<c:if test="${message != null }">
@@ -15,7 +15,8 @@
 			<tr>
 				<th>Index</th>
 				<th>Email</th>
-				<th>Full Name</th>
+				<th>First Name</th>
+				<th>Last Name</th>
 				<th>City</th>
 				<th>Country</th>
 				<th>Registerd Date</th>
@@ -25,9 +26,10 @@
 			<tr>
 				<td align="center">${theCount.index + 1 }</td>
 				<td>${customer.email }</td>
-				<td>${customer.fullname }</td>
+				<td>${customer.firstname }</td>
+				<td>${customer.lastname }</td>
 				<td>${customer.city }</td>
-				<td>${customer.country }</td>
+				<td>${customer.countryName }</td>
 				<td><fmt:formatDate pattern='MM/dd/yyyy' value='${customer.registerDate }' /></td>
 				<td>
 					<a href="edit_customer?id=${customer.customerId }&name=${customer.fullname}">Edit</a> &nbsp

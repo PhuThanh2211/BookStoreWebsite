@@ -15,8 +15,13 @@
 				</tr>
 					
 				<tr>
-					<td align="right">Full Name:</td>
-					<td align="left"><input type="text" name="fullName" value="${loggedCustomer.fullname }" id="fullName" size="45"/></td>
+					<td align="right">First Name:</td>
+					<td align="left"><input type="text" name="firstname" value="${loggedCustomer.firstname }" id="firstname" size="45"/></td>
+				</tr>
+				
+				<tr>
+					<td align="right">Last Name:</td>
+					<td align="left"><input type="text" name="lastname" value="${loggedCustomer.lastname }" id="lastname" size="45"/></td>
 				</tr>
 				
 				<tr>
@@ -25,8 +30,13 @@
 				</tr>
 				
 				<tr>
-					<td align="right">Address:</td>
-					<td align="left"><input type="text" name="address" value="${loggedCustomer.address }" id="address" size="45"/></td>
+					<td align="right">Address Line 1:</td>
+					<td align="left"><input type="text" name="address1" value="${loggedCustomer.addressLine1 }" id="address1" size="45"/></td>
+				</tr>
+				
+				<tr>
+					<td align="right">Address Line 2:</td>
+					<td align="left"><input type="text" name="address2" value="${loggedCustomer.addressLine2 }" id="address2" size="45"/></td>
 				</tr>
 				
 				<tr>
@@ -35,13 +45,29 @@
 				</tr>
 				
 				<tr>
-					<td align="right">Country:</td>
-					<td align="left"><input type="text" name="country" value="${loggedCustomer.country }" id="country" size="45"/></td>
+					<td align="right">State:</td>
+					<td align="left"><input type="text" name="state" value="${loggedCustomer.state }" id="state" size="45"/></td>
 				</tr>
 				
 				<tr>
 					<td align="right">Zip Code:</td>
 					<td align="left"><input type="text" name="zipCode" value="${loggedCustomer.zipcode }" id="zipCode" size="45"/></td>
+				</tr>
+				
+				<tr>
+					<td align="right">Country:</td>
+					<td align="left">
+						<select name="country" id="country">
+							<c:forEach items="${mapCountries }" var="country">
+								<option value="${country.value }"
+									<c:if test="${loggedCustomer.country eq country.value }">
+										selected="selected"
+									</c:if> >
+									${country.key }
+								</option>
+							</c:forEach>
+						</select>
+					</td>
 				</tr>
 				
 				<tr>
@@ -81,19 +107,19 @@
 					email: true
 				},
 				
-				fullName: "required",
+				firstname: "required",
+				lastname: "required",
 				
 				confirmPassword: {
 					equalTo: "#password"
 				},
 				
-				
 				phone: "required",
-				address: "required",
+				address1: "required",
+				address2: "required",
 				city: "required",
+				state: "required",
 				zipCode: "required",
-				country: "required",
-				
 			},
 		
 			messages: {
@@ -102,17 +128,19 @@
 					email: "Please enter a valid email address"
 				},
 				
-				fullName: "Please enter full name",
+				firstname: "Please enter first name",
+				lastname: "Please enter last name",
 				
 				confirmPassword: {
 					equalTo: "Confirm password does not match password"
 				},
 				
 				phone: "Please enter phone number",
-				address: "Please enter address",
+				address1: "Please enter address line 1",
+				address2: "Please enter address line 2",
 				city: "Please enter city",
+				state: "Please enter state",
 				zipCode: "Please enter zip code",
-				country: "Please enter country",
 			}		
 		});
 	});

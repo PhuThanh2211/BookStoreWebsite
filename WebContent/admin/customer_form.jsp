@@ -18,51 +18,7 @@
 		<form action="update_customer" method="POST" id="customerForm">
 		<input type="hidden" name="customerId" value="${customer.customerId }" />
 		</c:if>
-			<table class="form">
-				<tr>
-					<td align="right">Email:</td>
-					<td align="left"><input type="text" name="email" value="${customer.email }" id="email" size="45"/></td>
-				</tr>	
-				<tr>
-					<td align="right">Full Name:</td>
-					<td align="left"><input type="text" name="fullName" value="${customer.fullname }" id="fullName" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Password:</td>
-					<td align="left"><input type="password" name="password" id="password" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Confirm Password:</td>
-					<td align="left"><input type="password" name="confirmPassword" id="confirmPassword" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Phone Number:</td>
-					<td align="left"><input type="text" name="phone" value="${customer.phone }" id="phone" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Address:</td>
-					<td align="left"><input type="text" name="address" value="${customer.address }" id="address" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">City:</td>
-					<td align="left"><input type="text" name="city" value="${customer.city }" id="city" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Country:</td>
-					<td align="left"><input type="text" name="country" value="${customer.country }" id="country" size="45"/></td>
-				</tr>
-				<tr>
-					<td align="right">Zip Code:</td>
-					<td align="left"><input type="text" name="zipCode" value="${customer.zipcode }" id="zipCode" size="45"/></td>
-				</tr>
-			
-				<tr>
-					<td colspan="2" align="center">
-						<button class="spaceButton" type="submit">Save</button>
-						<button type="button" id="cancelButton">Cancel</button>
-					</td>
-				</tr>
-			</table>
+			<jsp:directive.include file="../common/customer_form.jsp" />
 		</form>
 	</div>
 	
@@ -77,7 +33,8 @@
 					email: true
 				},
 				
-				fullName: "required",
+				firstname: "required",
+				lastname: "required",
 				
 				<c:if test="${customer == null }">
 				password: "required",
@@ -93,11 +50,11 @@
 				
 				
 				phone: "required",
-				address: "required",
+				address1: "required",
+				address2: "required",
 				city: "required",
+				state: "required",
 				zipCode: "required",
-				country: "required",
-				
 			},
 		
 			messages: {
@@ -106,7 +63,8 @@
 					email: "Please enter a valid email address"
 				},
 				
-				fullName: "Please enter full name",
+				firstname: "Please enter first name",
+				lastname: "Please enter last name",
 				
 				<c:if test="${customer == null }">
 				password: "Please enter password",
@@ -121,10 +79,11 @@
 				},
 				
 				phone: "Please enter phone number",
-				address: "Please enter address",
+				address1: "Please enter address line 1",
+				address2: "Please enter address line 2",
 				city: "Please enter city",
+				state: "Please enter state",
 				zipCode: "Please enter zip code",
-				country: "Please enter country",
 			}		
 		});
 	});
